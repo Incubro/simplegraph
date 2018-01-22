@@ -32,12 +32,10 @@ public class Example1 {
             PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
             String fromServer;
-            while ((fromServer = in.readLine()) != null) {
-                System.out.println("Server: " + fromServer);
-                if (fromServer.equals("Bye."))
-                    break;
-                out.println("knock knock");
-            }
+            out.println("add:jatin:codes:java");
+            System.out.println(in.readLine());
+            out.println("list:jatin:codes:null");
+            System.out.println(in.readLine());
         } catch(Exception e){
             System.out.println(e);
         }

@@ -16,6 +16,7 @@ import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class SimpleGraph {
 	
@@ -53,7 +54,7 @@ public class SimpleGraph {
 		this.fileName = fileName;
 	}
 
-	public SimpleGraph load() throws GraphException, IOException {
+	public SimpleGraph load() throws GraphException, IOException, FileNotFoundException {
 		if (fileName.equals(""))
 			throw new GraphException("No File Name specified");
 		FileInputStream fis = new FileInputStream(fileName);
