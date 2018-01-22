@@ -53,7 +53,7 @@ public class SimpleGraph {
 		this.fileName = fileName;
 	}
 
-	public void load() throws GraphException, IOException {
+	public SimpleGraph load() throws GraphException, IOException {
 		if (fileName.equals(""))
 			throw new GraphException("No File Name specified");
 		FileInputStream fis = new FileInputStream(fileName);
@@ -67,6 +67,7 @@ public class SimpleGraph {
 		} catch(ClassNotFoundException e){
 			throw new GraphException("Corrupted Database File");
 		}
+		return this;
 	}
 
 	public void commit() throws GraphException, IOException {
@@ -188,7 +189,7 @@ public class SimpleGraph {
 				// first run on bindings, just add every match!
 				bindings = new HashMap<String, Set<String>>();
 				bindings.put(variables.get(variables.keySet().toArray()[0]), triples);
-//				System.out.println("BIND: added everything");
+				// System.out.println("BIND: added everything");
 			}
 			else {
 				Map<String, Set<String>> newBindings = new HashMap<String, Set<String>>();
@@ -200,9 +201,9 @@ public class SimpleGraph {
 				}
 				newBindings.put(variables.get(variables.keySet().toArray()[0]), newSet);
 				bindings = newBindings;
-//				System.out.println("BIND: updated existing");
+				// System.out.println("BIND: updated existing");
 			}
-//			System.out.println("\t" + bindings);
+			// System.out.println("\t" + bindings);
 		}
 		else{
 			throw new GraphException("Only 1 variable supported! Size is " + variables.size() + " and content: " + variables);
