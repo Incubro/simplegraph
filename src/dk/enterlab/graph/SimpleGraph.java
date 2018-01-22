@@ -9,6 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.LinkedList;
+
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class SimpleGraph {
 	
@@ -18,20 +25,63 @@ public class SimpleGraph {
 		_spo = null,
 		_pos = null,
 		_osp = null;
+	private String fileName;
 		
-	public SimpleGraph(){
+	public SimpleGraph() {
 		_spo = new HashMap<String, Map<String,Set<String>>>();
 		_pos = new HashMap<String, Map<String, Set<String>>>();
 		_osp = new HashMap<String, Map<String, Set<String>>>();
+		this.fileName = "";
+	}
+
+	public SimpleGraph(String fileName){
+		_spo = new HashMap<String, Map<String,Set<String>>>();
+		_pos = new HashMap<String, Map<String, Set<String>>>();
+		_osp = new HashMap<String, Map<String, Set<String>>>();
+		this.fileName = fileName;
 	}
 	
 	public void add(String subject, String predicate, String object){
-
 		if (subject!=null && predicate!=null && object!=null){
 			addToIndex(_spo, subject, predicate, object);
 			addToIndex(_pos, predicate, object, subject);
 			addToIndex(_osp, object, subject, predicate);
 		}
+	}
+
+	public void addFile(String fileName) throws GraphException {
+		if (!this.fileName.equals(""))
+			throw new GraphException("File Name alreay specified");
+		this.fileName = fileName;
+	}
+
+	public void load() throws GraphException, IOException {
+		if (fileName.equals(""))
+			throw new GraphException("No File Name specified");
+		FileInputStream fis = new FileInputStream(fileName);
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		LinkedList<Map<String, Map<String, Set<String>>>> listOfObjects;
+		try{
+			listOfObjects = (LinkedList<Map<String, Map<String, Set<String>>>>) ois.readObject();
+			_spo = listOfObjects.get(0);
+			_pos = listOfObjects.get(1);
+			_osp = listOfObjects.get(2);
+		} catch(ClassNotFoundException e){
+			throw new GraphException("Corrupted Database File");
+		}
+	}
+
+	public void commit() throws GraphException, IOException {
+		if (fileName.equals(""))
+			throw new GraphException("No File Name specified");
+		FileOutputStream fos = new FileOutputStream(fileName);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		LinkedList<Map<String, Map<String, Set<String>>>> listOfObjects = new LinkedList<>();
+		listOfObjects.add(_spo);
+		listOfObjects.add(_pos);
+		listOfObjects.add(_osp);
+		oos.writeObject(listOfObjects);
+		oos.close();
 	}
 	
 	private void addToIndex(Map<String, Map<String, Set<String>>> index, String a, String b, String c){
@@ -90,7 +140,7 @@ public class SimpleGraph {
 				if (object==null){
 					return _spo;
 				}
-				else { // subject == null, predicate != null
+				else { // subject == null, object != null
 					return _osp.get(object);
 				}
 			}
@@ -269,7 +319,7 @@ public class SimpleGraph {
 		try {
 			SimpleGraph g = get_sample_graph(false);
 			
-			boolean queryOnly = true;
+			boolean queryOnly = false;
 			
 			if (queryOnly){
 				List<String[]> query = new ArrayList<String[]>();
