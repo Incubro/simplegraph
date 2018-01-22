@@ -451,7 +451,6 @@ public class SimpleGraph {
 		g.add("boy_2", "brother", "boy_1");
 		g.add("boy_2", "sister", "girl");
 		g.add("boy_2", "age", "10");
-		g.add("boy_2", "title", "b¿rnehave_dreng");
 
 		g.add("girl", "name", "Girl Girlsen");
 		g.add("girl", "gender", "female");
@@ -531,7 +530,6 @@ public class SimpleGraph {
 		g.add("post_1", "link", "http://dude.dude");
 		g.add("other_dude", "likes", "post_1");
 		
-		g.add("old_dude", "name", "B¿rge Andersen");
 		g.add("old_dude", "title", "nerd");
 		
 		if (huge){
