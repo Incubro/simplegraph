@@ -1,4 +1,4 @@
-package dk.enterlab.graph;
+package personalised.library.GraphDB;
 
 public class GraphException extends Exception {
 

@@ -1,4 +1,4 @@
-package dk.enterlab.graph;
+package personalised.library.GraphDB;
 
 import java.util.HashMap;
 import java.util.Map;
