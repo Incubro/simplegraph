@@ -48,6 +48,14 @@ public class SimpleGraph {
 		}
 	}
 
+	public void delete(String subject, String predicate, String object) throws GraphException {
+		if (subject != null && predicate != null && object != null){
+			removeFromIndex(_spo, subject, predicate, object);
+			removeFromIndex(_pos, predicate, object, subject);
+			removeFromIndex(_osp, object, subject, predicate);
+		}
+	}
+
 	public void addFile(String fileName) throws GraphException {
 		if (!this.fileName.equals(""))
 			throw new GraphException("File Name alreay specified");
@@ -82,6 +90,24 @@ public class SimpleGraph {
 		listOfObjects.add(_osp);
 		oos.writeObject(listOfObjects);
 		oos.close();
+	}
+
+	private void removeFromIndex(Map<String, Map<String, Set<String>>> index, String a, String b, String c) throws GraphException{
+		Map<String, Set<String>> _map = index.get(a);
+		if (_map == null){
+			throw new GraphException("First Argument node not found.");
+		}
+
+		Set<String> _set = _map.get(b);
+		if (_set == null){
+			throw new GraphException("Second Argument node not found.");
+		}
+
+		if (_set.contains(c)){
+			_set.remove(c);
+		} else {
+			throw new GraphException("Third Argument node not found.");
+		}
 	}
 	
 	private void addToIndex(Map<String, Map<String, Set<String>>> index, String a, String b, String c){

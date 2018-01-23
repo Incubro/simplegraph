@@ -59,6 +59,11 @@ public class Server {
                     if (params.length != 4)
                         throw new GraphException("Exactly 3 parameter required with 2 being null");
                     out.println(g.map(params[1], params[2], params[3]));
+                } else if (params[0].equals("delete")) {
+                    if (params.length != 4)
+                        throw new GraphException("Exactly 3 parameter required");
+                    g.delete(params[1], params[2], params[3]);
+                    out.println("Deleted");
                 } else if (params[0].equals("list")) {
                     if (params.length != 4)
                         throw new GraphException("Exactly 3 parameter required with 1 being null");

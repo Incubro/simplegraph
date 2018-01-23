@@ -23,6 +23,8 @@ public class Client {
             while(true) {
                 System.out.print(">>> ");
                 resp = scanner.next();
+                if (resp.equals("quit"))
+                    break;
                 out.println(resp);
                 System.out.println(in.readLine());
             }
