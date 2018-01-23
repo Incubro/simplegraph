@@ -56,6 +56,28 @@ public class SimpleGraph {
 		}
 	}
 
+	public void update(String subject, String predicate, String object, String updateChoice, String newValue) throws GraphException {
+		if (subject != null && predicate != null && object != null) {
+			if (updateChoice.toLowerCase().equals("s") || updateChoice.toLowerCase().equals("o") || updateChoice.toLowerCase().equals("p")){
+				if (updateChoice.toLowerCase().equals("s")){
+					updateIndex(_spo, subject, predicate, object, "a", newValue);
+					updateIndex(_pos, predicate, object, subject, "c", newValue);
+					updateIndex(_osp, object, subject, predicate, "b", newValue);
+				} else if (updateChoice.toLowerCase().equals("o")) {
+					updateIndex(_spo, subject, predicate, object, "c", newValue);
+					updateIndex(_pos, predicate, object, subject, "b", newValue);
+					updateIndex(_osp, object, subject, predicate, "a", newValue);
+				} else if (updateChoice.toLowerCase().equals("p")) {
+					updateIndex(_spo, subject, predicate, object, "b", newValue);
+					updateIndex(_pos, predicate, object, subject, "a", newValue);
+					updateIndex(_osp, object, subject, predicate, "c", newValue);
+				}
+			} else {
+				throw new GraphException("Illegal update choice");
+			}
+		}
+	}
+
 	public void addFile(String fileName) throws GraphException {
 		if (!this.fileName.equals(""))
 			throw new GraphException("File Name alreay specified");
@@ -90,6 +112,35 @@ public class SimpleGraph {
 		listOfObjects.add(_osp);
 		oos.writeObject(listOfObjects);
 		oos.close();
+	}
+
+	private void updateIndex(Map<String, Map<String, Set<String>>> index, String a, String b, String c, String updateChoice, String newValue) throws GraphException {
+		Map<String, Set<String>> _map = index.get(a);
+		if (_map == null){
+			throw new GraphException("First Argument node not found.");
+		} else if (updateChoice.equals("a")) {
+			Map<String, Set<String>> tempMap = index.get(a);
+			index.remove(a);
+			index.put(newValue, tempMap);
+		}
+
+		Set<String> _set = _map.get(b);
+		if (_set == null){
+			throw new GraphException("Second Argument node not found.");
+		} else if (updateChoice.equals("b")) {
+			Set<String> tempSet = _map.get(b);
+			_map.remove(b);
+			_map.put(newValue, tempSet);
+		}
+
+		if (_set.contains(c)){
+			if (updateChoice.equals("c")) {
+				_set.remove(c);
+				_set.add(newValue);
+			}
+		} else {
+			throw new GraphException("Third Argument node not found.");
+		}
 	}
 
 	private void removeFromIndex(Map<String, Map<String, Set<String>>> index, String a, String b, String c) throws GraphException{
